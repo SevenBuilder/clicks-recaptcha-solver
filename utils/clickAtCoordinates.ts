@@ -149,14 +149,10 @@ export const clickAtCoordinates = async (
         }
     }
 
-    // We get the coordinates of the center of the element
-    // const x = boundingBox.x + boundingBox.width / 2;
-    // const y = boundingBox.y + boundingBox.height / 2;
-
     // Adding randomness to coordinates
     x = x + getRandomNumber(1, 5);
     y = y + getRandomNumber(1, 5);
-    console.log(`Click on coordinates x:${x},y:${y}`);
+    // console.log(`Click on coordinates x:${x},y:${y}`);
     await page.mouse.click(x, y);
 
     // Visualization of clicks when highlightClicks mode is enabled

@@ -29,8 +29,8 @@ export const clickRecaptchaVerifyButton = async (page: Page, highlightClicks = f
     let x = boundingBox.x + w + getRandomNumber(1, 35);
     let y = boundingBox.y + h + getRandomNumber(1, 5);
 
-    console.log(`Click on coordinates x:${x},y:${y}`);
-    console.log('Click Verify/Skip');
+    // console.log(`Click on coordinates x:${x},y:${y}`);
+    // console.log('Click Verify/Skip');
 
     // Click on the specified coordinates
     await page.mouse.click(x, y);

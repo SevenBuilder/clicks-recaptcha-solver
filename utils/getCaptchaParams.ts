@@ -37,6 +37,6 @@ export async function getCaptchaParams(frame: any): Promise<CaptchaParams> {
     const result: CaptchaParams = await frame.evaluate(() => {
         return window.getRecaptchaParams();
     });
-    console.log(result);
+
     return result;
 }
