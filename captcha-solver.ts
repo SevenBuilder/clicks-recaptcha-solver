@@ -1,12 +1,12 @@
 import { Solver } from '@2captcha/captcha-solver';
 import { Page } from 'playwright-core';
-import { initCaptchaParamsExtractor } from './utils/initCaptchaParamsExtractor';
-import { getCaptchaParams } from './utils/getCaptchaParams';
-import { clickRecaptchaVerifyButton } from './utils/clickRecaptchaVerifyButton';
-import { clickAtCoordinates } from './utils/clickAtCoordinates';
-import { isRecaptchaPassed } from './utils/isRecaptchaPassed';
-import { isFoundRecaptchaChallengeFrame } from './utils/isFoundRecaptchaChallengeFrame';
-import { isFoundReCaptchaBadge } from './utils/isFoundReCaptchaBadge';
+import { initCaptchaParamsExtractor } from './lib/initCaptchaParamsExtractor';
+import { getCaptchaParams } from './lib/getCaptchaParams';
+import { clickRecaptchaVerifyButton } from './lib/clickRecaptchaVerifyButton';
+import { clickAtCoordinates } from './lib/clickAtCoordinates';
+import { isRecaptchaPassed } from './lib/isRecaptchaPassed';
+import { isFoundRecaptchaChallengeFrame } from './lib/isFoundRecaptchaChallengeFrame';
+import { isFoundReCaptchaBadge } from './lib/isFoundReCaptchaBadge';
 
 const sleep = (time: number) => new Promise((resolve) => setTimeout(resolve, time));
 
