@@ -10,26 +10,18 @@ import { isFoundReCaptchaBadge } from './utils/isFoundReCaptchaBadge';
 
 const sleep = (time: number) => new Promise((resolve) => setTimeout(resolve, time));
 
-// The basic logic of the captcha solution
-export const captchaSolver = async function (page: Page, apikey: string) {
-    const solver = new Solver(apikey, 500);
+export const captchaSolver = async function (page: Page, APIkey: string) {
+    const solver = new Solver(APIkey, 500);
     const recaptchaBadgeIframeSelector = 'iframe[title="reCAPTCHA"]';
     const recaptchaCheckboxSelector = 'span.recaptcha-checkbox-unchecked';
 
     await page.waitForSelector(recaptchaBadgeIframeSelector, { timeout: 30000 });
     await sleep(5000);
 
-    // Search for reCAPTCHA Badge on the page
-    const isFoundReCaptcha = await isFoundReCaptchaBadge(page);
-
-    // Checking whether the recaptcha is found on the page, if not, then we generate an error message
-    if (isFoundReCaptcha) {
-        console.log(`reCAPTCHA Badge is found.`);
-    } else {
+    if (!(await isFoundReCaptchaBadge(page))) {
         throw new Error('reCAPTCHA Badge not found!');
     }
 
-    // Getting a recaptcha badge iframe
     const iframeElementHandle = await page.$(recaptchaBadgeIframeSelector);
     if (!iframeElementHandle) {
         throw new Error('reCAPTCHA Badge iframe not found!');
@@ -37,7 +29,6 @@ export const captchaSolver = async function (page: Page, apikey: string) {
     const recaptchaBadgeIframe = await iframeElementHandle.contentFrame();
 
     if (recaptchaBadgeIframe) {
-        // Click on checkbox reCAPTCHA
         await recaptchaBadgeIframe.evaluate((recaptchaCheckboxSelector) => {
             const recaptchaCheckbox = document.querySelector(recaptchaCheckboxSelector);
             if (recaptchaCheckbox) {
@@ -49,82 +40,58 @@ export const captchaSolver = async function (page: Page, apikey: string) {
 
         await sleep(5000);
 
-        // We check for the presence of a frame with a captcha task
-        const isRecaptchaChallengeShow = await isFoundRecaptchaChallengeFrame(page);
-
-        // Set the value to `true` for visualization of clicks
-        const highlightClicks = false;
-
-        if (isRecaptchaChallengeShow) {
+        if (await isFoundRecaptchaChallengeFrame(page)) {
             const frameHandle = await page.waitForSelector(
                 'iframe[src*="https://www.google.com/recaptcha/api2/bframe"]'
             );
-            let frame = await frameHandle.contentFrame();
-
-            // Initialize the captcha parameter extraction function in the frame
+            const frame = await frameHandle.contentFrame();
             await initCaptchaParamsExtractor(frame);
 
             let isCaptchaNotSolved = true;
+            const highlightClicks = false;
 
-            // The captcha solution cycle
             while (isCaptchaNotSolved) {
                 const captchaParams = await getCaptchaParams(frame);
-
-                console.log(
-                    `Successfully fetched captcha parameters. recaptcha size is ${captchaParams.columns}*${captchaParams.rows}`
-                );
-
-                // Getting a captcha solution
                 const answer = await solver.grid({
                     body: captchaParams.body,
                     textinstructions: captchaParams.comment,
                     cols: captchaParams.columns,
                     rows: captchaParams.rows,
                     canSkip: 1,
-                    imgType: 'recaptcha', // TODO: add param to lib,
+                    imgType: 'recaptcha',
                     recaptcha: 1
                 });
 
-                const isCapthcaSolved = answer.data;
-                if (isCapthcaSolved) {
-                    console.log(`The answer for captcha ${answer.id} was received successfully`);
-                    console.log(answer);
+                if (answer.data) {
                     if (answer.data === 'No_matching_images') {
-                        // 'No_matching_images' - The captcha image does not contain images that meet the requirements. This means that the captcha has been solved.
                         await sleep(1213);
                         await clickRecaptchaVerifyButton(page);
                     }
                 } else {
-                    // TODO:  when you get "ERROR_CAPTCHA_UNSOLVABLE" you can try to solve captcha again
                     return false;
                 }
 
-                // Parse the answer
-                let clicks: number[] = answer.data
+                const clicks = answer.data
                     .replace('click:', '')
                     .split('/')
-                    .map((el) => Number(el)); // removing the "click:" line from the response and converting to number
-
-                console.log('Clicks:', clicks);
+                    .map((el) => Number(el));
 
                 const captchaSize = captchaParams.columns;
+                const timeToSleep = 100;
 
-                // Making clicks
-                let timeToSleep = 100; // ms
-                clicks.forEach(async (el, id) => {
-                    await sleep(timeToSleep * id); // delay (number of seconds of delay for each click)
+                for (const [index, el] of clicks.entries()) {
+                    await sleep(timeToSleep * index);
                     await clickAtCoordinates(page, captchaSize, el, highlightClicks);
-                });
+                }
 
                 await sleep(timeToSleep * (clicks.length + 1) + 2202);
                 await clickRecaptchaVerifyButton(page, highlightClicks);
 
                 await sleep(3000);
-                const isCaptchaSolved = await isRecaptchaPassed(page);
-                isCaptchaNotSolved = !isCaptchaSolved;
+                isCaptchaNotSolved = !(await isRecaptchaPassed(page));
             }
-
             return true;
         }
     }
+    return false;
 };
