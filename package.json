@@ -1,5 +1,5 @@
 {
-    "name": "clicks-recaptcha-solver",
+    "name": "@seven-builder/clicks-recaptcha-solver",
     "version": "1.0.0",
     "main": "dist/index.js",
     "types": "dist/index.d.ts",
@@ -18,9 +18,9 @@
         "dev": "tsc --watch"
     },
     "keywords": [],
-    "author": "",
+    "author": "Seven Builder",
     "license": "ISC",
-    "description": "",
+    "description": "A powerful automation tool for solving Google reCAPTCHA challenges using Playwright and Puppeteer. This package intelligently detects and simulates human-like interactions, including mouse movements and precise clicks, to bypass reCAPTCHA v2 and other similar challenges. Ideal for automation workflows, web scraping, and bot-driven tasks.",
     "devDependencies": {
         "@types/node": "^22.13.10",
         "playwright-core": "^1.51.0",
@@ -28,5 +28,16 @@
     },
     "dependencies": {
         "@2captcha/captcha-solver": "^1.3.0"
-    }
+    },
+    "directories": {
+        "lib": "lib"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/SevenBuilder/clicks-recaptcha-solver.git"
+    },
+    "bugs": {
+        "url": "https://github.com/SevenBuilder/clicks-recaptcha-solver/issues"
+    },
+    "homepage": "https://github.com/SevenBuilder/clicks-recaptcha-solver#readme"
 }
