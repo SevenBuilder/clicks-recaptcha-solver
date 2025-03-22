@@ -1,6 +1,6 @@
 {
-    "name": "@seven-builder/clicks-recaptcha-solver",
-    "version": "1.0.0",
+    "name": "clicks-recaptcha-solver",
+    "version": "1.1.0",
     "main": "dist/index.js",
     "types": "dist/index.d.ts",
     "exports": {
