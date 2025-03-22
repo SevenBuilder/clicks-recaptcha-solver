@@ -9,7 +9,7 @@ import { Page } from 'playwright-core';
  * @param {Object} page - The Puppeteer page object containing the reCAPTCHA.
  * @returns {Promise<boolean>} - A promise that resolves to true if reCAPTCHA is passed, otherwise false.
  */
-export async function isRecaptchaPassed(page: Page) {
+export async function isRecaptchaPassed(page: Page): Promise<boolean> {
     // Select iframe that contains reCAPTCHA
     const frames = await page.frames();
 

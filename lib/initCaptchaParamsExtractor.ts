@@ -1,4 +1,4 @@
-import { CaptchaParams } from './getCaptchaParams';
+import type { CaptchaParams } from '@/types';
 
 /**
  * Initializes a custom function within the captcha iframe to extract parameters.

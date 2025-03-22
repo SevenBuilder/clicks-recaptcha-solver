@@ -23,7 +23,7 @@ import { Page } from 'playwright-core';
  *   }
  * })();
  */
-export async function isFoundRecaptchaChallengeFrame(page: Page) {
+export async function isFoundRecaptchaChallengeFrame(page: Page): Promise<boolean> {
     try {
         // Wait for the reCAPTCHA iframe to appear
         const frameHandle = await page.waitForSelector(
